@@ -9,8 +9,12 @@ require_login();
 $pdo = get_db();
 $user = get_current_user();
 
+// DEBUG: log session and cookie state to error log to help diagnose session issues
+error_log(sprintf("[DEBUG] dashboard.php: session_id=%s, _SESSION=%s, _COOKIE=%s", session_id(), var_export($_SESSION, true), var_export($_COOKIE, true)));
+
 // ユーザー情報が取得できない場合はエラー
 if (!$user || !is_array($user)) {
+    error_log('[DEBUG] dashboard.php: get_current_user returned null or non-array');
     die('ユーザー情報を取得できませんでした。');
 }
 
