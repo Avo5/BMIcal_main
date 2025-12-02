@@ -21,14 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && password_verify($password, $user['password_hash'])) {
             // ログイン成功
             session_regenerate_id(true);
-            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_id'] = (int)$user['id'];
+            // Explicitly write session to disk before redirect
+            session_write_close();
             // DEBUG: detailed session logging
-            error_log(sprintf("[DEBUG] login.php after setSSION: user['id']=%s, _SESSION['user_id']=%s, session_id=%s, isset(user_id)=%s, keys=%s", 
+            error_log(sprintf("[DEBUG] login.php after session_write_close: user['id']=%s, _SESSION['user_id']=%s, session_id=%s", 
                 var_export($user['id'], true), 
                 var_export($_SESSION['user_id'] ?? 'NOTSET', true),
-                session_id(),
-                var_export(isset($_SESSION['user_id']), true),
-                var_export(array_keys($_SESSION), true)
+                session_id()
             ));
             header('Location: /dashboard.php');
             exit;

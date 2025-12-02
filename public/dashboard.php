@@ -20,7 +20,7 @@ error_log(sprintf("[DEBUG] dashboard.php at top: session_id=%s, _SESSION user_id
 
 // ユーザー情報が取得できない場合はエラー
 if (!$user || !is_array($user)) {
-    error_log('[DEBUG] dashboard.php: get_current_user returned null or non-array');
+    error_log(sprintf('[DEBUG] dashboard.php: get_current_user returned %s', var_export($user, true)));
     die('ユーザー情報を取得できませんでした。');
 }
 
