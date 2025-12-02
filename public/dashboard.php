@@ -8,6 +8,12 @@ require_login();
 
 $pdo = get_db();
 $user = get_current_user();
+
+// ユーザー情報が取得できない場合はエラー
+if (!$user) {
+    die('ユーザー情報を取得できませんでした。');
+}
+
 $errors = [];
 $success = false;
 
