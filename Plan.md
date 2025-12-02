@@ -180,6 +180,38 @@ function calc_tdee($bmr, $activity = 1.2) {
 - 理由: target の変化に対して過去データが自動で反映されるよう DB に保存しない
 
 
+## DB セットアップ（環境移行対応）
+
+本プロジェクトは **別の DB 環境への移行を想定** して、SQL スクリプトで初期化する設計になっています。
+
+### セットアップ方法
+
+1. **ローカル開発（MAMP）:**
+   ```bash
+   mysql -u root tech_base_php < schema.sql
+   ```
+   （パスワードなし、UNIX socket自動選択）
+
+2. **別の DB サーバ（本番環境等）:**
+   ```bash
+   mysql -h your.db.host -u db_user -pdb_password tech_base_php < schema.sql
+   ```
+
+3. **Docker / Cloud DB:**
+   - `schema.sql` の内容をそのまま SQL コンソールで実行
+
+### スキーマ定義
+
+本プロジェクトの `schema.sql` ファイルに、以下の 3 つのテーブルとインデックスが定義されています：
+
+- **users** — ユーザー情報（生年月日・性別）
+- **goals** — ユーザーごとの目標値（1:1 関係）
+- **body_records** — 記録（1:N 関係）
+- **インデックス** — クエリパフォーマンス最適化
+
+詳細は下記のスキーマ仕様セクションを参照してください。
+
+
 ## DB スキーマ（確定版）
 
 ユーザーの指定により、以下の **3 つのテーブルを 1:N で設計**します。

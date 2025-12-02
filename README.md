@@ -111,11 +111,24 @@ return [
 
 ### 3. DB テーブル作成
 
-データベースの詳細なスキーマ（CREATE TABLE 等）は本リポジトリの `Plan.md` に記載しています。運用環境に合わせて `config/config.php` を作成し、Plan.md の DDL を実行してください。
+データベーススキーマは `schema.sql` ファイルで定義されています。以下のコマンドでテーブルを初期化してください：
+
+**ローカル開発（MAMP）:**
+```bash
+mysql -u root tech_base_php < schema.sql
+```
+
+**別環境（本番環境など）:**
+```bash
+mysql -h your.db.host -u db_user -pdb_password tech_base_php < schema.sql
+```
+
+詳細なスキーマ仕様（CREATE TABLE、インデックス等）は `Plan.md` の「DB セットアップ」セクションを参照してください。
 
 （要点）
-- テーブルは `users`, `goals`, `body_records` の 3 つ。詳細は `Plan.md` を参照。
-- `body_records` は同日複数レコードを許可する設計です（`UNIQUE(user_id, record_date)` は付けない）。
+- テーブルは `users`, `goals`, `body_records` の 3 つ
+- `body_records` は同日複数レコードを許可する設計です（`UNIQUE(user_id, record_date)` は付けない）
+- スキーマは移行対応（別環境への SQL スクリプト適用）を想定した設計
 
 
 ### 4. Web サーバ設定
