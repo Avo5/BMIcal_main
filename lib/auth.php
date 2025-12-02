@@ -24,9 +24,12 @@ if (!function_exists('get_current_user')) {
     {
         $uid = current_user_id();
         if (!$uid) return null;
+        $uid = (int)$uid; // ensure integer
         $pdo = get_db();
         $stmt = $pdo->prepare('SELECT id, username, birth_date, sex, created_at, updated_at FROM users WHERE id = ?');
         $stmt->execute([$uid]);
-        return $stmt->fetch() ?: null;
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($row)) return null;
+        return $row;
     }
 }

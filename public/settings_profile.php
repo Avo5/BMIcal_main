@@ -10,7 +10,7 @@ $pdo = get_db();
 $user = get_current_user();
 
 // ユーザー情報が取得できない場合はエラー
-if (!$user) {
+if (!$user || !is_array($user)) {
     die('ユーザー情報を取得できませんでした。');
 }
 
