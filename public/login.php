@@ -22,8 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // ログイン成功
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
-            // DEBUG: log session id and session contents to php error log for troubleshooting
-            error_log(sprintf("[DEBUG] login.php: session_id=%s, _SESSION=%s, _COOKIE=%s", session_id(), var_export($_SESSION, true), var_export($_COOKIE, true)));
+            // DEBUG: detailed session logging
+            error_log(sprintf("[DEBUG] login.php after setSSION: user['id']=%s, _SESSION['user_id']=%s, session_id=%s, isset(user_id)=%s, keys=%s", 
+                var_export($user['id'], true), 
+                var_export($_SESSION['user_id'] ?? 'NOTSET', true),
+                session_id(),
+                var_export(isset($_SESSION['user_id']), true),
+                var_export(array_keys($_SESSION), true)
+            ));
             header('Location: /dashboard.php');
             exit;
         }

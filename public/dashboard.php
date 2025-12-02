@@ -9,8 +9,14 @@ require_login();
 $pdo = get_db();
 $user = get_current_user();
 
-// DEBUG: log session and cookie state to error log to help diagnose session issues
-error_log(sprintf("[DEBUG] dashboard.php: session_id=%s, _SESSION=%s, _COOKIE=%s", session_id(), var_export($_SESSION, true), var_export($_COOKIE, true)));
+// DEBUG: detailed session logging before user check
+error_log(sprintf("[DEBUG] dashboard.php at top: session_id=%s, _SESSION user_id=%s, isset=%s, keys=%s, user_result=%s", 
+    session_id(), 
+    var_export($_SESSION['user_id'] ?? 'NOTSET', true),
+    var_export(isset($_SESSION['user_id']), true),
+    var_export(array_keys($_SESSION), true),
+    var_export($user, true)
+));
 
 // ユーザー情報が取得できない場合はエラー
 if (!$user || !is_array($user)) {
