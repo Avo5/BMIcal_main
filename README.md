@@ -16,6 +16,12 @@
 - **ダッシュボード** — 記録一覧表示、目標達成度を可視化
 - **パスワード変更** — セキュリティ管理
 
+### 追記（最近の実装）
+
+- **目標編集 UX の改良** — 目標（理想体重 / 目標 BMI / 目標 BMR / 目標 TDEE）はユーザーがその中の「どれか1つだけ」を直接編集できるようになりました。選んだ1項目から残りをサーバ側で自動計算して保存します（矛盾入力の防止）。
+- **CSV エクスポート** — ダッシュボードから記録を CSV でダウンロードする機能を追加（`/export_records_csv.php`）。
+- **activity_level（活動レベル）** — ユーザーに活動レベルを設定できるようにし、TDEE の計算に利用します。未設定時はデフォルトで "low"（係数 1.2）を使用します。
+
 ### 技術スタック
 
 - **言語:** PHP 7.4 以上
@@ -121,6 +127,14 @@ mysql -u root tech_base_php < schema.sql
 **別環境（本番環境など）:**
 ```bash
 mysql -h your.db.host -u db_user -pdb_password tech_base_php < schema.sql
+```
+
+> 補足: 既存テーブルにカラムを追加する必要がある場合や `schema.sql` の直接適用が難しい場合は、リポジトリに含まれる `scripts/generate_alter_from_schema.php` を使って `ALTER TABLE ADD COLUMN` 系の SQL を生成できます（出力は `migrations/alter_add_columns.sql`）。実行前に内容を必ず確認し、バックアップを取ってください。
+
+```bash
+php scripts/generate_alter_from_schema.php > migrations/alter_add_columns.sql
+# 確認後に実行（例）
+mysql -u root tech_base_php < migrations/alter_add_columns.sql
 ```
 
 詳細なスキーマ仕様（CREATE TABLE、インデックス等）は `Plan.md` の「DB セットアップ」セクションを参照してください。

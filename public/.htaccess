@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # 実在するファイルやディレクトリにはリライトしない
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # すべてのリクエストを index.php へ （不要な場合は削除）
+    # RewriteRule ^ index.php [L]
+</IfModule>

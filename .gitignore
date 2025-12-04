@@ -1,0 +1,39 @@
+# 秘密設定・ローカル設定
+config/config.php
+.env
+.env.local
+.env.*.php
+
+# IDE・エディタ
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+.AppleDouble
+
+# ログ・キャッシュ
+*.log
+*.pid
+tmp/
+cache/
+
+# PHP
+*.phtml
+
+# Node / npm（フロントエンドツール使用時）
+node_modules/
+package-lock.json
+yarn.lock
+
+# Composer（PHP 依存管理使用時）
+composer.lock
+vendor/
+
+# プロジェクト特有
+.session/
+uploads/

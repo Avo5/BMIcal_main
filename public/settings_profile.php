@@ -7,7 +7,7 @@ require_once __DIR__ . '/_init.php';
 require_login();
 
 $pdo = get_db();
-$user = get_current_user();
+$user = current_user();
 
 // ユーザー情報が取得できない場合はエラー
 if (!$user || !is_array($user)) {
@@ -23,28 +23,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        $birth_date = trim((string)($_POST['birth_date'] ?? '')) ?: null;
-        $sex = trim((string)($_POST['sex'] ?? '')) ?: null;
+    $birth_date = trim((string)($_POST['birth_date'] ?? '')) ?: null;
+    $sex = trim((string)($_POST['sex'] ?? '')) ?: null;
+    $height_cm = trim((string)($_POST['height_cm'] ?? '')) ?: null;
+    $activity_level = trim((string)($_POST['activity_level'] ?? '')) ?: null;
 
         // sex の値チェック
         if ($sex && !in_array($sex, ['male', 'female', 'other'], true)) {
             $errors[] = '無効な性別です。';
         }
+        // activity_level のチェック
+        if ($activity_level && !in_array($activity_level, ['low', 'medium', 'high'], true)) {
+            $errors[] = '無効な活動レベルです。';
+        }
 
         if (empty($errors)) {
             $now = (new DateTime())->format('Y-m-d H:i:s');
 
-            // プロフィール更新
+            // プロフィール更新（身長を追加）
             $upd = $pdo->prepare(
-                'UPDATE users SET birth_date = ?, sex = ?, updated_at = ? WHERE id = ?'
+                'UPDATE users SET birth_date = ?, sex = ?, height_cm = ?, activity_level = ?, updated_at = ? WHERE id = ?'
             );
-            $upd->execute([$birth_date, $sex, $now, $user['id']]);
+            $upd->execute([$birth_date, $sex, $height_cm ? (float)$height_cm : null, $activity_level ?: null, $now, $user['id']]);
 
             // 既存の body_records の BMR/TDEE を再計算（lib の共通関数を使用）
             $updated = recalc_body_records_for_user($pdo, $user['id']);
             $success = true;
-            // 更新後のユーザデータを再取得
-            $user = get_current_user();
+            // 更新後のユーザデータを再取得（height_cm を含める）
+            $stmt = $pdo->prepare('SELECT id, username, birth_date, sex, height_cm, activity_level, created_at, updated_at FROM users WHERE id = ?');
+            $stmt->execute([$user['id']]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
         }
     }
 }
@@ -75,6 +83,15 @@ require_once __DIR__ . '/../templates/header.php';
             <option value="male" <?php echo ($user['sex'] === 'male') ? 'selected' : ''; ?>>男性</option>
             <option value="female" <?php echo ($user['sex'] === 'female') ? 'selected' : ''; ?>>女性</option>
             <option value="other" <?php echo ($user['sex'] === 'other') ? 'selected' : ''; ?>>その他</option>
+        </select>
+    </label><br>
+    <label>身長 (cm): <input type="number" step="0.1" name="height_cm" value="<?php echo htmlspecialchars((string)($user['height_cm'] ?? '')); ?>"></label><br>
+    <label>活動レベル:
+        <select name="activity_level">
+            <option value="">選択してください</option>
+            <option value="low" <?php echo ($user['activity_level'] === 'low') ? 'selected' : ''; ?>>低い（座りがち）</option>
+            <option value="medium" <?php echo ($user['activity_level'] === 'medium') ? 'selected' : ''; ?>>中程度（適度に活動）</option>
+            <option value="high" <?php echo ($user['activity_level'] === 'high') ? 'selected' : ''; ?>>高い（活発）</option>
         </select>
     </label><br>
     <button type="submit">更新</button>
