@@ -13,6 +13,6 @@
 </head>
 <body>
 <header>
-    <h1><a href="/">PHP TechBase</a></h1>
+    <h1>BMI計測サイト</h1>
 </header>
 <main>
