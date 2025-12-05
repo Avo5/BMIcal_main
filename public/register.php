@@ -57,4 +57,6 @@ require_once __DIR__ . '/../templates/header.php';
     <button type="submit">登録</button>
 </form>
 
+<p>アカウントをお持ちの場合は <a href="https://tech-base.net/tb-270805/PHPインターン/mission6/project/public/login.php">ログイン</a></p>
+
 <?php require_once __DIR__ . '/../templates/footer.php';
