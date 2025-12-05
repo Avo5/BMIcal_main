@@ -110,14 +110,15 @@ USE your_database_name;
 
 -- users テーブル
 CREATE TABLE IF NOT EXISTS users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    birth_date DATE NULL,
-    sex ENUM('male', 'female', 'other') NULL,
-    height_cm decimal(5,2) NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+  username      VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  birth_date    DATE NULL,
+  height_cm     DECIMAL(5,2) NULL,
+  sex           ENUM('male', 'female', 'other') NULL,
+  activity_level ENUM('low','medium','high') NULL,
+  created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- goals テーブル
