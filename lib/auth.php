@@ -34,6 +34,11 @@ if (!function_exists('current_user')) {
         $stmt->execute([(int)$uid]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!is_array($row)) return null;
+        // ここで型を整える
+        $row['id'] = isset($row['id']) ? (int)$row['id'] : null;
+        if ($row['height_cm'] !== null) {
+            $row['height_cm'] = (float)$row['height_cm'];
+        }
         return $row;
     }
 }
